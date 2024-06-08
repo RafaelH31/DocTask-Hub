@@ -2,7 +2,8 @@ package project.docutaskhub.dominio
 
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
-import org.w3c.dom.DocumentType
+import project.docutaskhub.enums.DocumentType
+
 
 @Entity
 @Table(name = "documents")

@@ -3,6 +3,8 @@ package project.docutaskhub.dominio
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 
+@Entity
+@Table(name = "boards")
 class Board (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

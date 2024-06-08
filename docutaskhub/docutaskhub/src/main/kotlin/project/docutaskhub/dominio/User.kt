@@ -8,10 +8,10 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "users")
-data class User (
+data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @field:NotBlank(message = "Username é obrigatório")
     @field:Size(min = 3, max = 50, message = "Username deve ter entre 3 e 50 caracteres")
@@ -26,4 +26,6 @@ data class User (
     var senha: String,
 
     var dataDeRegistro: LocalDateTime = LocalDateTime.now()
-)
+) {
+    constructor(username: String, email: String, senha: String, dataDeRegistro: LocalDateTime = LocalDateTime.now()) : this(null, username, email, senha, dataDeRegistro)
+}
