@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank
 class Board (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @field:NotBlank(message = "Nome é obrigatório")
     var nome: String,
@@ -26,8 +26,12 @@ class Board (
         joinColumns = [JoinColumn(name = "quadro_id")],
         inverseJoinColumns = [JoinColumn(name = "usuario_id")]
     )
-    var usuarios: List<User> = mutableListOf(),
+    var usuarios: List<User>? = mutableListOf(),
 
     @OneToMany(mappedBy = "board", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var tasks: List<Task> = mutableListOf()
-)
+    var tasks: List<Task>? = mutableListOf()
+) {
+
+    constructor(nome: String, descricao: String, criadoPor: User, usuarios: List<User>?, tasks: List<Task>?) :
+            this(null, nome, descricao, criadoPor)
+}

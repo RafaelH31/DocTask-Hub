@@ -6,5 +6,8 @@ import project.docutaskhub.dominio.User
 
 @Repository
 interface UserRepository : JpaRepository<User, Int> {
+
     fun existsByEmail(email: String): Boolean
+
+    fun findByEmailIn(emails: List<String>): List<User>
 }
