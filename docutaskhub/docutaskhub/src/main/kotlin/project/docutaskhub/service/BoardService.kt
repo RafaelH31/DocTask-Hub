@@ -4,13 +4,15 @@ import org.springframework.stereotype.Service
 import project.docutaskhub.dominio.Board
 import project.docutaskhub.dto.*
 import project.docutaskhub.repository.BoardRepository
+import project.docutaskhub.repository.TaskRepository
 import project.docutaskhub.repository.UserRepository
 
 
 @Service
 class BoardService(
     private val boardRepository: BoardRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val taskRepository: TaskRepository
 ) {
 
     fun criarBoard(boardRequest: BoardRequest): BoardResponse {
@@ -82,12 +84,12 @@ class BoardService(
         return Pair(boardsCriados, boardsAssociados)
     }
 
-    fun getBoardDetails(userId: Int, boardId: Int): List<Any>? {
+    fun visualizarBoard(userId: Int, boardId: Int): List<Any>? {
         val user = userRepository.findById(userId)
             .orElseThrow { IllegalArgumentException("Usuário não encontrado com o ID $userId") }
 
         val board = boardRepository.findById(boardId)
-            .orElseThrow { IllegalArgumentException("Quadro não encontrado com o ID $boardId") }
+            .orElseThrow { IllegalArgumentException("Board não encontrado com o ID $boardId") }
 
         val isCreator = user == board.criadoPor
         val isAssociated = board.usuarios?.contains(user)
@@ -136,16 +138,16 @@ class BoardService(
     }
 
 
-    fun updateBoard(boardId: Int, updateRequest: BoardAttRequest): BoardResponseAtt {
+    fun atualizarBoard(boardId: Int, updateRequest: BoardAttRequest): BoardResponseAtt {
         val board = boardRepository.findById(boardId)
-            .orElseThrow { IllegalArgumentException("Quadro não encontrado com o ID $boardId") }
+            .orElseThrow { IllegalArgumentException("Board não encontrado com o ID $boardId") }
 
         updateRequest.nome?.let { board.nome = it }
         updateRequest.descricao?.let { board.descricao = it }
 
         updateRequest.usuarios?.let { userEmails ->
             val users = userRepository.findByEmailIn(userEmails)
-            board.usuarios = users.toMutableList()  // Convertendo a lista de usuários para uma lista mutável
+            board.usuarios = users.toMutableList()
         }
 
         val updatedBoard = boardRepository.save(board)
@@ -154,10 +156,17 @@ class BoardService(
             id = updatedBoard.id,
             nome = updatedBoard.nome,
             descricao = updatedBoard.descricao,
-            usuarios = updatedBoard.usuarios?.map { it.email } // Retornar e-mails dos usuários associados
+            usuarios = updatedBoard.usuarios?.map { it.email }
         )
     }
 
+    fun deletarBoard(boardId: Int) {
+        val board = boardRepository.findById(boardId)
+            .orElseThrow { IllegalArgumentException("Board não encontrado com o ID $boardId") }
+
+        taskRepository.deleteAllByBoardId(boardId)
+        boardRepository.delete(board)
+    }
 
 
 }

@@ -70,13 +70,13 @@ class BoardController(private val boardService: BoardService) {
             ApiResponse(responseCode = "500", description = "Erro interno do servidor")
         ]
     )
-    @GetMapping("/{boardId}/details")
-    fun getBoardDetails(
+    @GetMapping("/visualizar/{boardId}")
+    fun getById(
         @PathVariable userId: Int,
         @PathVariable boardId: Int
     ): ResponseEntity<Any> {
         return try {
-            val boardDetails = boardService.getBoardDetails(userId, boardId)
+            val boardDetails = boardService.visualizarBoard(userId, boardId)
             if (boardDetails != null) {
                 ResponseEntity.ok(boardDetails)
             } else {
@@ -98,20 +98,40 @@ class BoardController(private val boardService: BoardService) {
             ApiResponse(responseCode = "500", description = "Erro interno do servidor")
         ]
     )
-    @PutMapping("/{boardId}")
-    fun updateBoard(
+    @PatchMapping("/atualizar/{boardId}")
+    fun patch(
         @PathVariable boardId: Int,
         @RequestBody @Valid updateRequest: BoardAttRequest
     ): ResponseEntity<Any> {
         return try {
-            val updatedBoard = boardService.updateBoard(boardId, updateRequest)
+            val updatedBoard = boardService.atualizarBoard(boardId, updateRequest)
             ResponseEntity.ok(updatedBoard)
         } catch (e: IllegalArgumentException) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(mapOf("message" to e.message))
+            ResponseEntity.status(400).body(mapOf("message" to e.message))
         } catch (e: NoSuchElementException) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body(mapOf("message" to "Quadro não encontrado"))
+            ResponseEntity.status(404).body(mapOf("message" to "Quadro não encontrado"))
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(mapOf("message" to e.message))
+            ResponseEntity.status(500).body(mapOf("message" to e.message))
+        }
+    }
+
+    @Operation(summary = "Excluir um quadro", description = "Exclui um quadro e todos os seus itens associados")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "204", description = "Quadro excluído com sucesso"),
+            ApiResponse(responseCode = "404", description = "Quadro não encontrado"),
+            ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+        ]
+    )
+    @DeleteMapping("/deletar/{boardId}")
+    fun delete(@PathVariable boardId: Int): ResponseEntity<Any> {
+        return try {
+            boardService.deletarBoard(boardId)
+            ResponseEntity.status(204).build()
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.status(404).body(mapOf("message" to "Quadro não encontrado"))
+        } catch (e: Exception) {
+            ResponseEntity.status(500).body(mapOf("message" to e.message))
         }
     }
 
