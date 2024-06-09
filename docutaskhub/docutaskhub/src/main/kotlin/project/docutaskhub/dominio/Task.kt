@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int?,
 
     @field:NotBlank(message = "Título é obrigatório")
     var titulo: String,
@@ -50,4 +50,13 @@ data class Task(
 
     @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var documentos: List<Document> = mutableListOf()
-)
+){
+    // Construtor secundário para criar instâncias sem especificar o ID
+    constructor(
+        titulo: String, descricao: String, status: Status, board: Board, criadoPor: User,
+        atribuidoPara: User, cor: String? = null, dataDeCriacao: LocalDateTime = LocalDateTime.now(),
+        dataDeAtualizacao: LocalDateTime? = null, dataDeVencimento: LocalDate? = null,
+        subtarefas: List<Subtask> = mutableListOf(), documentos: List<Document> = mutableListOf()
+    ) : this(null, titulo, descricao, status, board, criadoPor, cor, dataDeCriacao, dataDeAtualizacao,
+        dataDeVencimento, atribuidoPara, subtarefas, documentos)
+}

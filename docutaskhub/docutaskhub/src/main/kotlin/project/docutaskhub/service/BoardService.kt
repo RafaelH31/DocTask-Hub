@@ -6,6 +6,7 @@ import project.docutaskhub.dto.*
 import project.docutaskhub.repository.BoardRepository
 import project.docutaskhub.repository.TaskRepository
 import project.docutaskhub.repository.UserRepository
+import java.time.LocalDateTime
 
 
 @Service
@@ -97,7 +98,7 @@ class BoardService(
         return if (isCreator || isAssociated == true) {
             val tasks = board.tasks!!.map { task ->
                 TaskResponse(
-                    id = task.id,
+                    id = task.id!!,
                     titulo = task.titulo,
                     descricao = task.descricao,
                     status = task.status,
@@ -125,8 +126,8 @@ class BoardService(
                         DocumentResponse(
                             id = document.id,
                             nome = document.nome,
-                            type = document.type.toString(),
-                            taskId = task.id
+                            type = document.type,
+                            taskId = task.id!!
                         )
                     }
                 )
@@ -167,6 +168,7 @@ class BoardService(
         taskRepository.deleteAllByBoardId(boardId)
         boardRepository.delete(board)
     }
+
 
 
 }
