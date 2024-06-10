@@ -13,7 +13,6 @@ import project.docutaskhub.repository.UserRepository
 class UserService(private val userRepository: UserRepository) {
 
     fun cadastrarUsuario(novoUsuario: UserRequest): UserResponse {
-
         if (userRepository.existsByEmail(novoUsuario.email)) {
             throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Email já cadastrado")
         }
@@ -24,8 +23,14 @@ class UserService(private val userRepository: UserRepository) {
             senha = novoUsuario.senha,
             dataDeRegistro = novoUsuario.dataDeRegistro
         )
+
         val usuarioSalvo = userRepository.save(user)
-        return UserResponse(usuarioSalvo.id!!, usuarioSalvo.username, usuarioSalvo.email, usuarioSalvo.dataDeRegistro)
+        return UserResponse(
+            id = usuarioSalvo.id ?: throw IllegalStateException("ID do usuário não pode ser nulo"),
+            username = usuarioSalvo.username,
+            email = usuarioSalvo.email,
+            dataDeRegistro = usuarioSalvo.dataDeRegistro
+        )
     }
 
     fun login(loginRequest: LoginRequest): Boolean {

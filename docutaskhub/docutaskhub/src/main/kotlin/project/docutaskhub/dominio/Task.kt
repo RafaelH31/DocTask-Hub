@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class Task(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int?,
+    var id: Int? = null,
 
     @field:NotBlank(message = "Título é obrigatório")
     var titulo: String,
@@ -39,7 +39,7 @@ data class Task(
     var dataDeAtualizacao: LocalDateTime?,
 
     @Column(name = "data_vencimento")
-    var dataDeVencimento: LocalDate?,
+    var dataDeVencimento: LocalDate? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to_id")
