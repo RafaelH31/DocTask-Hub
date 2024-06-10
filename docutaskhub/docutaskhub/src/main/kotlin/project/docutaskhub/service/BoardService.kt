@@ -108,20 +108,6 @@ class BoardService(
                     dataDeVencimento = task.dataDeVencimento,
                     criadoPorId = task.criadoPor,
                     atribuidoParaId = task.atribuidoPara,
-                    subtarefas = task.subtarefas.map { subtask ->
-                        SubtaskResponse(
-                            id = subtask.id,
-                            titulo = subtask.titulo,
-                            descricao = subtask.descricao,
-                            status = subtask.status,
-                            cor = subtask.cor,
-                            dataDeCriacao = subtask.dataDeCriacao,
-                            dataDeAtualizacao = subtask.dataDeAtualizacao,
-                            dataDeVencimento = subtask.dataDeVencimento,
-                            criadoPorId = subtask.criadoPor.id!!,
-                            atribuidoParaId = subtask.atribuidoPara.id!!
-                        )
-                    },
                     documentos = task.documentos.map { document ->
                         DocumentResponse(
                             id = document.id,

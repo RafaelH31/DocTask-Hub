@@ -10,7 +10,7 @@ import project.docutaskhub.enums.DocumentType
 data class Document(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int,
+    var id: Int? = null,
 
     @field:NotBlank(message = "Nome é obrigatório")
     var nome: String,
@@ -20,8 +20,6 @@ data class Document(
 
     @Enumerated(EnumType.STRING)
     var type: DocumentType,
-
-    var idAssociacao: Int,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")

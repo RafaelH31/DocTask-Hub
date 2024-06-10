@@ -3,7 +3,6 @@ package project.docutaskhub.service
 import org.springframework.stereotype.Service
 import project.docutaskhub.dominio.Task
 import project.docutaskhub.dto.DocumentResponse
-import project.docutaskhub.dto.SubtaskResponse
 import project.docutaskhub.dto.TaskRequest
 import project.docutaskhub.dto.TaskResponse
 import project.docutaskhub.repository.*
@@ -16,7 +15,6 @@ class TaskService (
     private val taskRepository: TaskRepository,
     private val userRepository: UserRepository,
     private val documentRepository: DocumentRepository,
-    private val subtaskRepository: SubtaskRepository
 )
 
 {
@@ -60,27 +58,13 @@ class TaskService (
         val criadoPor = userRepository.findById(task.criadoPor.id!!)
             .orElseThrow { IllegalArgumentException("Usuário não encontrado com o ID ${task.criadoPor.id!!}") }
 
-        val subtarefas = task.subtarefas.map { subtask ->
-            SubtaskResponse(
-                id = subtask.id,
-                titulo = subtask.titulo,
-                descricao = subtask.descricao,
-                status = subtask.status,
-                cor = subtask.cor,
-                dataDeCriacao = subtask.dataDeCriacao,
-                dataDeAtualizacao = subtask.dataDeAtualizacao,
-                dataDeVencimento = subtask.dataDeVencimento,
-                criadoPorId = subtask.criadoPor.id!!,
-                atribuidoParaId = subtask.atribuidoPara.id!!
-            )
-        }
 
         val documentos = task.documentos.map { documento ->
             DocumentResponse(
                 id = documento.id,
                 nome = documento.nome,
                 type = documento.type,
-                taskId = documento.idAssociacao
+                taskId = documento.task.id
             )
         }
 
@@ -95,7 +79,6 @@ class TaskService (
             dataDeVencimento = task.dataDeVencimento,
             criadoPorId = criadoPor,
             atribuidoParaId = atribuidoPara,
-            subtarefas = subtarefas,
             documentos = documentos
         )
     }
@@ -113,27 +96,13 @@ class TaskService (
             val atribuidoPara = userRepository.findById(task.atribuidoPara.id!!)
                 .orElseThrow { IllegalArgumentException("Usuário não encontrado com o ID ${task.atribuidoPara.id}") }
 
-            val subtarefas = task.subtarefas.map { subtask ->
-                SubtaskResponse(
-                    id = subtask.id,
-                    titulo = subtask.titulo,
-                    descricao = subtask.descricao,
-                    status = subtask.status,
-                    cor = subtask.cor,
-                    dataDeCriacao = subtask.dataDeCriacao,
-                    dataDeAtualizacao = subtask.dataDeAtualizacao,
-                    dataDeVencimento = subtask.dataDeVencimento,
-                    criadoPorId = subtask.criadoPor.id!!,
-                    atribuidoParaId = subtask.atribuidoPara.id!!
-                )
-            }
 
             val documentos = task.documentos.map { documento ->
                 DocumentResponse(
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.idAssociacao
+                    taskId = documento.task.id
                 )
             }
 
@@ -148,7 +117,6 @@ class TaskService (
                 dataDeVencimento = task.dataDeVencimento,
                 criadoPorId = criadoPor,
                 atribuidoParaId = atribuidoPara,
-                subtarefas = subtarefas,
                 documentos = documentos
             )
         }
@@ -170,27 +138,13 @@ class TaskService (
             val atribuidoPara = userRepository.findById(task.atribuidoPara.id!!)
                 .orElseThrow { IllegalArgumentException("Usuário não encontrado com o ID ${task.atribuidoPara.id}") }
 
-            val subtarefas = task.subtarefas.map { subtask ->
-                SubtaskResponse(
-                    id = subtask.id,
-                    titulo = subtask.titulo,
-                    descricao = subtask.descricao,
-                    status = subtask.status,
-                    cor = subtask.cor,
-                    dataDeCriacao = subtask.dataDeCriacao,
-                    dataDeAtualizacao = subtask.dataDeAtualizacao,
-                    dataDeVencimento = subtask.dataDeVencimento,
-                    criadoPorId = subtask.criadoPor.id!!,
-                    atribuidoParaId = subtask.atribuidoPara.id!!
-                )
-            }
 
             val documentos = task.documentos.map { documento ->
                 DocumentResponse(
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.idAssociacao
+                    taskId = documento.task.id
                 )
             }
 
@@ -205,7 +159,6 @@ class TaskService (
                 dataDeVencimento = task.dataDeVencimento,
                 criadoPorId = criadoPor,
                 atribuidoParaId = atribuidoPara,
-                subtarefas = subtarefas,
                 documentos = documentos
             )
         }
@@ -245,27 +198,12 @@ class TaskService (
             dataDeVencimento = savedTask.dataDeVencimento,
             criadoPorId = criadoPor,
             atribuidoParaId = atribuidoPara,
-            subtarefas = savedTask.subtarefas.map { subtask ->
-
-                SubtaskResponse(
-                    id = subtask.id,
-                    titulo = subtask.titulo,
-                    descricao = subtask.descricao,
-                    status = subtask.status,
-                    cor = subtask.cor,
-                    dataDeCriacao = subtask.dataDeCriacao,
-                    dataDeAtualizacao = subtask.dataDeAtualizacao,
-                    dataDeVencimento = subtask.dataDeVencimento,
-                    criadoPorId = subtask.criadoPor.id!!,
-                    atribuidoParaId = subtask.atribuidoPara.id!!
-                )
-            },
             documentos = savedTask.documentos.map { documento ->
                 DocumentResponse(
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.idAssociacao
+                    taskId = documento.task.id
                 )
             }
         )
@@ -284,8 +222,6 @@ class TaskService (
 
         val task = board.tasks?.find { it.id == taskId }
             ?: throw IllegalArgumentException("Tarefa não encontrada com o ID $taskId no quadro com o ID $boardId")
-
-        task.subtarefas.forEach { subtaskRepository.delete(it) }
 
         task.documentos.forEach { documentRepository.delete(it) }
 

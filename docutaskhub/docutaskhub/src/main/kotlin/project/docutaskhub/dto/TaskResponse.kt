@@ -16,6 +16,5 @@ data class TaskResponse(
     val dataDeVencimento: LocalDate?,
     val criadoPorId: User,
     val atribuidoParaId: User,
-    val subtarefas: List<SubtaskResponse>,
     val documentos: List<DocumentResponse>
 )

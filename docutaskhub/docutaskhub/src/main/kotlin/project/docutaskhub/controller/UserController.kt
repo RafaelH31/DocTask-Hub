@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.springframework.http.HttpStatus
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
+import project.docutaskhub.dto.LoginRequest
 import project.docutaskhub.dto.UserRequest
 import project.docutaskhub.service.UserService
 
@@ -35,6 +36,22 @@ class UserController (
             ResponseEntity.status(400).body(mapOf("message" to e.message))
         } catch (e: Exception) {
             ResponseEntity.status(500).body(mapOf("message" to e.message))
+        }
+    }
+
+    @Operation(summary = "Login de usuário")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "Login bem-sucedido"),
+            ApiResponse(responseCode = "400", description = "Credenciais inválidas")
+        ]
+    )
+    @PostMapping("/login")
+    fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<Any> {
+        return if (userService.login(loginRequest)) {
+            ResponseEntity.ok().build()
+        } else {
+            ResponseEntity.status(400).build()
         }
     }
 

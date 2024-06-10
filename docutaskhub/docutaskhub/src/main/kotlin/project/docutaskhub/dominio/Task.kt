@@ -46,9 +46,6 @@ data class Task(
     var atribuidoPara: User,
 
     @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var subtarefas: List<Subtask> = mutableListOf(),
-
-    @OneToMany(mappedBy = "task", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var documentos: List<Document> = mutableListOf()
 ){
     // Construtor secundário para criar instâncias sem especificar o ID
@@ -56,7 +53,7 @@ data class Task(
         titulo: String, descricao: String, status: Status, board: Board, criadoPor: User,
         atribuidoPara: User, cor: String? = null, dataDeCriacao: LocalDateTime = LocalDateTime.now(),
         dataDeAtualizacao: LocalDateTime? = null, dataDeVencimento: LocalDate? = null,
-        subtarefas: List<Subtask> = mutableListOf(), documentos: List<Document> = mutableListOf()
+        documentos: List<Document> = mutableListOf()
     ) : this(null, titulo, descricao, status, board, criadoPor, cor, dataDeCriacao, dataDeAtualizacao,
-        dataDeVencimento, atribuidoPara, subtarefas, documentos)
+        dataDeVencimento, atribuidoPara, documentos)
 }

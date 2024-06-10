@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
 import project.docutaskhub.dominio.User
+import project.docutaskhub.dto.LoginRequest
 import project.docutaskhub.dto.UserRequest
 import project.docutaskhub.dto.UserResponse
 import project.docutaskhub.repository.UserRepository
@@ -25,6 +26,11 @@ class UserService(private val userRepository: UserRepository) {
         )
         val usuarioSalvo = userRepository.save(user)
         return UserResponse(usuarioSalvo.id!!, usuarioSalvo.username, usuarioSalvo.email, usuarioSalvo.dataDeRegistro)
+    }
+
+    fun login(loginRequest: LoginRequest): Boolean {
+        val user = userRepository.findByEmailAndSenha(loginRequest.email, loginRequest.senha)
+        return user != null
     }
 
     fun buscarAllUsuarios(): List<UserResponse> {
