@@ -31,7 +31,6 @@ class BoardService(
         val savedBoard = boardRepository.save(novoBoard)
 
         return BoardResponse(
-            id = savedBoard.id!!,
             nome = savedBoard.nome,
             descricao = savedBoard.descricao,
             criadoPorId = savedBoard.criadoPor.id!!,

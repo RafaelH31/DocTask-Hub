@@ -99,4 +99,70 @@ class BoardServiceTest {
 
         assertEquals("Board não encontrado com o ID 1", exception.message)
     }
+
+    @Test
+    fun `deve visualizar board com sucesso quando usuario e criador`() {
+        val usuario = User(1, "usuarioTeste", "teste@example.com", "senha123")
+        val board = Board(1, "Board Test", "Descrição do Board", usuario, mutableListOf(usuario), mutableListOf())
+
+        `when`(userRepository.findById(1)).thenReturn(Optional.of(usuario))
+        `when`(boardRepository.findById(1)).thenReturn(Optional.of(board))
+
+        val result = boardService.visualizarBoard(1, 1)
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `deve visualizar board com sucesso quando usuario esta associado`() {
+        val usuario = User(1, "usuarioTeste", "teste@example.com", "senha123")
+        val boardDono = User(1, "usuarioDono", "testeDono@example.com", "senha123")
+        val board = Board(1, "Board Test", "Descrição do Board", boardDono, mutableListOf(usuario), mutableListOf())
+
+        `when`(userRepository.findById(1)).thenReturn(Optional.of(usuario))
+        `when`(boardRepository.findById(1)).thenReturn(Optional.of(board))
+
+        val result = boardService.visualizarBoard(1, 1)
+
+        assertNotNull(result)
+    }
+
+    @Test
+    fun `deve retornar null quando usuario nao e criador nem associado`() {
+        val usuario = User(1, "usuarioTeste", "teste@example.com", "senha123")
+        val boardDono = User(1, "usuarioDono", "testeDono@example.com", "senha123")
+        val board = Board(1, "Board Test", "Descrição do Board", boardDono, mutableListOf(), mutableListOf())
+
+        `when`(userRepository.findById(1)).thenReturn(Optional.of(usuario))
+        `when`(boardRepository.findById(1)).thenReturn(Optional.of(board))
+
+        val result = boardService.visualizarBoard(1, 1)
+
+        assertNull(result)
+    }
+
+    @Test
+    fun `deve lançar exceção quando usuario nao encontrado`() {
+        `when`(userRepository.findById(1)).thenReturn(Optional.empty())
+
+        val exception = assertThrows<IllegalArgumentException> {
+            boardService.visualizarBoard(1, 1)
+        }
+
+        assertEquals("Usuário não encontrado com o ID 1", exception.message)
+    }
+
+    @Test
+    fun `deve lançar exceção quando board nao encontrado`() {
+        val usuario = User(1, "usuarioTeste", "teste@example.com", "senha123")
+
+        `when`(userRepository.findById(1)).thenReturn(Optional.of(usuario))
+        `when`(boardRepository.findById(1)).thenReturn(Optional.empty())
+
+        val exception = assertThrows<IllegalArgumentException> {
+            boardService.visualizarBoard(1, 1)
+        }
+
+        assertEquals("Board não encontrado com o ID 1", exception.message)
+    }
 }
