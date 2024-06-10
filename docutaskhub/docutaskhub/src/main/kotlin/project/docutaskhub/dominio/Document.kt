@@ -23,6 +23,6 @@ data class Document(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
-    var task: Task
+    var task: Task? = null
 
 )

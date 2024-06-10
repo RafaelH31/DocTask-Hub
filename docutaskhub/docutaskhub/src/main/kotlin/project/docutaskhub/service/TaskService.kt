@@ -64,7 +64,7 @@ class TaskService (
                 id = documento.id,
                 nome = documento.nome,
                 type = documento.type,
-                taskId = documento.task.id
+                taskId = documento.task!!.id
             )
         }
 
@@ -102,7 +102,7 @@ class TaskService (
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.task.id
+                    taskId = documento.task!!.id
                 )
             }
 
@@ -144,7 +144,7 @@ class TaskService (
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.task.id
+                    taskId = documento.task!!.id
                 )
             }
 
@@ -203,7 +203,7 @@ class TaskService (
                     id = documento.id,
                     nome = documento.nome,
                     type = documento.type,
-                    taskId = documento.task.id
+                    taskId = documento.task!!.id
                 )
             }
         )

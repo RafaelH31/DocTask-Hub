@@ -62,7 +62,7 @@ class DocumentService (
             id = document.id,
             nome = document.nome,
             type = document.type,
-            taskId = document.task.id
+            taskId = document.task!!.id
         )
     }
 
