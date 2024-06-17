@@ -14,7 +14,7 @@ data class TaskResponse(
     val dataDeCriacao: LocalDateTime,
     val dataDeAtualizacao: LocalDateTime?,
     val dataDeVencimento: LocalDate?,
-    val criadoPorId: User,
-    val atribuidoParaId: User,
+    val criadoPorId: UserResponse,
+    val atribuidoParaId: UserResponse,
     val documentos: List<DocumentResponse>
 )

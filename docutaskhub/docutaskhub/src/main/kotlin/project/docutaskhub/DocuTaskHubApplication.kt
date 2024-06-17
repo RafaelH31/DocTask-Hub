@@ -6,6 +6,6 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class DocuTaskHubApplication
 
-fun main(args: Array<String>) {
+	fun main(args: Array<String>) {
 	runApplication<DocuTaskHubApplication>(*args)
 }

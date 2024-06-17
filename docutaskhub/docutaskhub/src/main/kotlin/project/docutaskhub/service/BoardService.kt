@@ -105,8 +105,18 @@ class BoardService(
                     dataDeCriacao = task.dataDeCriacao,
                     dataDeAtualizacao = task.dataDeAtualizacao,
                     dataDeVencimento = task.dataDeVencimento,
-                    criadoPorId = task.criadoPor,
-                    atribuidoParaId = task.atribuidoPara,
+                    criadoPorId = UserResponse(
+                        id = task.criadoPor.id!!,
+                        username = task.criadoPor.username,
+                        email = task.criadoPor.email,
+                        dataDeRegistro = task.criadoPor.dataDeRegistro
+                    ),
+                    atribuidoParaId = UserResponse(
+                        id = task.atribuidoPara.id!!,
+                        username = task.atribuidoPara.username,
+                        email = task.atribuidoPara.email,
+                        dataDeRegistro = task.atribuidoPara.dataDeRegistro
+                    ),
                     documentos = task.documentos.map { document ->
                         DocumentResponse(
                             id = document.id,
@@ -122,6 +132,7 @@ class BoardService(
             null
         }
     }
+
 
 
     fun atualizarBoard(boardId: Int, updateRequest: BoardAttRequest): BoardResponseAtt {

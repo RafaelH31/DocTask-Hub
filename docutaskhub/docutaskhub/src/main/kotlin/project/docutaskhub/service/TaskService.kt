@@ -5,6 +5,7 @@ import project.docutaskhub.dominio.Task
 import project.docutaskhub.dto.DocumentResponse
 import project.docutaskhub.dto.TaskRequest
 import project.docutaskhub.dto.TaskResponse
+import project.docutaskhub.dto.UserResponse
 import project.docutaskhub.repository.*
 import java.time.LocalDateTime
 
@@ -18,7 +19,7 @@ class TaskService (
 )
 
 {
-    fun criarTask(boardId: Int, taskRequest: TaskRequest): Any {
+    fun criarTask(boardId: Int, taskRequest: TaskRequest): TaskResponse {
         val board = boardRepository.findById(boardId)
             .orElseThrow { IllegalArgumentException("Quadro não encontrado com o ID $boardId") }
 
@@ -41,9 +42,46 @@ class TaskService (
         )
 
         val savedTask = taskRepository.save(task)
-        return savedTask
 
+        val criadoPorResponse = UserResponse(
+            id = savedTask.criadoPor.id!!,
+            username = savedTask.criadoPor.username,
+            email = savedTask.criadoPor.email,
+            dataDeRegistro = savedTask.criadoPor.dataDeRegistro
+        )
+
+        val atribuidoParaResponse = UserResponse(
+            id = savedTask.atribuidoPara.id!!,
+            username = savedTask.atribuidoPara.username,
+            email = savedTask.atribuidoPara.email,
+            dataDeRegistro = savedTask.atribuidoPara.dataDeRegistro
+        )
+
+        val taskResponse = TaskResponse(
+            id = savedTask.id!!,
+            titulo = savedTask.titulo,
+            descricao = savedTask.descricao,
+            status = savedTask.status,
+            cor = savedTask.cor,
+            dataDeCriacao = savedTask.dataDeCriacao,
+            dataDeAtualizacao = savedTask.dataDeAtualizacao,
+            dataDeVencimento = savedTask.dataDeVencimento,
+            criadoPorId = criadoPorResponse,
+            atribuidoParaId = atribuidoParaResponse,
+            documentos = savedTask.documentos.map { documento ->
+                DocumentResponse(
+                    id = documento.id,
+                    nome = documento.nome,
+                    type = documento.type,
+                    taskId = documento.task!!.id
+                )
+            }
+        )
+
+        return taskResponse
     }
+
+
 
     fun visualizarTask(boardId: Int, taskId: Int): TaskResponse {
         val board = boardRepository.findById(boardId)
@@ -58,6 +96,19 @@ class TaskService (
         val criadoPor = userRepository.findById(task.criadoPor.id!!)
             .orElseThrow { IllegalArgumentException("Usuário não encontrado com o ID ${task.criadoPor.id!!}") }
 
+        val criadoPorResponse = UserResponse(
+            id = task.criadoPor.id!!,
+            username = task.criadoPor.username,
+            email = task.criadoPor.email,
+            dataDeRegistro = task.criadoPor.dataDeRegistro
+        )
+
+        val atribuidoParaResponse = UserResponse(
+            id = task.atribuidoPara.id!!,
+            username = task.atribuidoPara.username,
+            email = task.atribuidoPara.email,
+            dataDeRegistro = task.atribuidoPara.dataDeRegistro
+        )
 
         val documentos = task.documentos.map { documento ->
             DocumentResponse(
@@ -77,8 +128,8 @@ class TaskService (
             dataDeCriacao = task.dataDeCriacao,
             dataDeAtualizacao = task.dataDeAtualizacao,
             dataDeVencimento = task.dataDeVencimento,
-            criadoPorId = criadoPor,
-            atribuidoParaId = atribuidoPara,
+            criadoPorId = criadoPorResponse,
+            atribuidoParaId = atribuidoParaResponse,
             documentos = documentos
         )
     }
@@ -105,7 +156,19 @@ class TaskService (
                     taskId = documento.task!!.id
                 )
             }
+            val criadoPorResponse = UserResponse(
+                id = task.criadoPor.id!!,
+                username = task.criadoPor.username,
+                email = task.criadoPor.email,
+                dataDeRegistro = task.criadoPor.dataDeRegistro
+            )
 
+            val atribuidoParaResponse = UserResponse(
+                id = task.atribuidoPara.id!!,
+                username = task.atribuidoPara.username,
+                email = task.atribuidoPara.email,
+                dataDeRegistro = task.atribuidoPara.dataDeRegistro
+            )
             TaskResponse(
                 id = task.id!!,
                 titulo = task.titulo,
@@ -115,8 +178,8 @@ class TaskService (
                 dataDeCriacao = task.dataDeCriacao,
                 dataDeAtualizacao = task.dataDeAtualizacao,
                 dataDeVencimento = task.dataDeVencimento,
-                criadoPorId = criadoPor,
-                atribuidoParaId = atribuidoPara,
+                criadoPorId = criadoPorResponse,
+                atribuidoParaId = atribuidoParaResponse,
                 documentos = documentos
             )
         }
@@ -147,7 +210,19 @@ class TaskService (
                     taskId = documento.task!!.id
                 )
             }
+            val criadoPorResponse = UserResponse(
+                id = task.criadoPor.id!!,
+                username = task.criadoPor.username,
+                email = task.criadoPor.email,
+                dataDeRegistro = task.criadoPor.dataDeRegistro
+            )
 
+            val atribuidoParaResponse = UserResponse(
+                id = task.atribuidoPara.id!!,
+                username = task.atribuidoPara.username,
+                email = task.atribuidoPara.email,
+                dataDeRegistro = task.atribuidoPara.dataDeRegistro
+            )
             TaskResponse(
                 id = task.id!!,
                 titulo = task.titulo,
@@ -157,8 +232,8 @@ class TaskService (
                 dataDeCriacao = task.dataDeCriacao,
                 dataDeAtualizacao = task.dataDeAtualizacao,
                 dataDeVencimento = task.dataDeVencimento,
-                criadoPorId = criadoPor,
-                atribuidoParaId = atribuidoPara,
+                criadoPorId = criadoPorResponse,
+                atribuidoParaId = atribuidoParaResponse,
                 documentos = documentos
             )
         }
@@ -186,7 +261,19 @@ class TaskService (
         }
 
         val savedTask = taskRepository.save(task)
+        val criadoPorResponse = UserResponse(
+            id = task.criadoPor.id!!,
+            username = task.criadoPor.username,
+            email = task.criadoPor.email,
+            dataDeRegistro = task.criadoPor.dataDeRegistro
+        )
 
+        val atribuidoParaResponse = UserResponse(
+            id = task.atribuidoPara.id!!,
+            username = task.atribuidoPara.username,
+            email = task.atribuidoPara.email,
+            dataDeRegistro = task.atribuidoPara.dataDeRegistro
+        )
         return TaskResponse(
             id = savedTask.id!!,
             titulo = savedTask.titulo,
@@ -196,8 +283,8 @@ class TaskService (
             dataDeCriacao = savedTask.dataDeCriacao,
             dataDeAtualizacao = savedTask.dataDeAtualizacao,
             dataDeVencimento = savedTask.dataDeVencimento,
-            criadoPorId = criadoPor,
-            atribuidoParaId = atribuidoPara,
+            criadoPorId = criadoPorResponse,
+            atribuidoParaId = atribuidoParaResponse,
             documentos = savedTask.documentos.map { documento ->
                 DocumentResponse(
                     id = documento.id,
